@@ -52,6 +52,9 @@ public class MLPMBS {
     static String trainingDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled.txt";
     static String logFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled_training_log.txt";
 
+    // Training iteration
+    static long cnt = 0;
+
     public static void main(String[] args) throws Exception {
 
         System.out.println("************************************************");
@@ -75,17 +78,20 @@ public class MLPMBS {
         logOut = new BufferedWriter(new FileWriter(logFileName));
 
 
-        // Training iteration
-        long i = 0;
-
         while(true) {
 
-            i++;
+            cnt++;
 
-            if(i % 1 == 0) {
-                System.out.println("i = " + i);
-                logOut.write("i = " + i + "\n");
+            if(cnt % 100 == 0) {
+                System.out.println("cnt = " + cnt);
+            }
+            if(cnt % 1 == 0) {
+                logOut.write("cnt = " + cnt + "\n");
                 evaluateModel(model);
+            }
+            if(cnt % 1000 == 0) {
+                System.out.println(new Date());
+                logOut.write(new Date() + "\n");
             }
 
             /*
@@ -100,8 +106,8 @@ public class MLPMBS {
             // Train the model
             model = train(model, trainIter);
 
-            if (i % 50000 == 0) {
-                writeModelToFile(model, "/down/mbs_model_" + hpId + "_" + i + ".zip");
+            if (cnt % 50000 == 0) {
+                writeModelToFile(model, "/down/mbs_model_" + hpId + "_" + cnt + ".zip");
             }
 
             logOut.flush();
@@ -341,8 +347,6 @@ public class MLPMBS {
 
     public static void evaluateModel(MultiLayerNetwork model) throws Exception {
 
-        System.out.println(">>> Evaluating...");
-
         for(int i = 0; i <= 4; i++) {
 
             double[] featureData = new double[numOfInputs];
@@ -352,8 +356,10 @@ public class MLPMBS {
 
             INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
             INDArray output = model.output(feature);
-            System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output);
+            if(cnt % 100 == 0) {
+                System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
+                System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output);
+            }
             logOut.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
             logOut.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output + "\n");
         }
