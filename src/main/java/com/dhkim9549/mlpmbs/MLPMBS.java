@@ -82,7 +82,7 @@ public class MLPMBS {
 
             i++;
 
-            if(i % 100 == 0) {
+            if(i % 1 == 0) {
                 System.out.println("i = " + i);
                 logOut.write("i = " + i + "\n");
                 evaluateModel(model);
