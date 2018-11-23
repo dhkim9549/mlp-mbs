@@ -343,20 +343,23 @@ public class MLPMBS {
 
         System.out.println(">>> Evaluating...");
 
-        double[] featureData = new double[numOfInputs];
-        featureData[0] = 0.46;
-        featureData[1] = 0.75;
-        featureData[2] = 0.75;
+        for(int i = 0; i <= 4; i++) {
+
+            double[] featureData = new double[numOfInputs];
+            featureData[0] = 0.46 + (double)i * 0.10;
+            featureData[1] = 0.75;
+            featureData[2] = 0.75;
+
+            INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
+            INDArray output = model.output(feature);
+            System.out.print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output);
+            logOut.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
+            logOut.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output + "\n");
+        }
 
 
 
-
-
-        INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
-        INDArray output = model.output(feature);
-        //System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> feature = " + feature);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output);
-        logOut.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> output = " + output);
     }
 
     public static double rescaleAmt(long x) {
