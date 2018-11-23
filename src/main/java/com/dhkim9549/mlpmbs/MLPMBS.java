@@ -318,7 +318,7 @@ public class MLPMBS {
         INDArray label = Nd4j.create(labelData, new int[]{1, numOfOutputs});
 
         DataSet ds = null;
-        if(loan_rat <= 0.0) {
+        if(loan_rat <= 0.0 || labelDataSum <= 0.0) {
         } else {
             ds = new DataSet(feature, label);
         }
