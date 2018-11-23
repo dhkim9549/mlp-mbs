@@ -295,10 +295,12 @@ public class MLPMBS {
 
 
 
+        String loan_ramt_str_sum = "";
         String[] loan_ramt_str = new String[14];
         double[] loan_ramt = new double[14];
         for(int i = 0; i < loan_ramt_str.length; i++) {
             loan_ramt_str[i] = getToken(s, 20 + i, "\t");
+            loan_ramt_str_sum += loan_ramt_str[i];
             if(loan_ramt_str[i].equals("")) {
                 loan_ramt[i] = 0;
             } else {
@@ -309,7 +311,6 @@ public class MLPMBS {
         int treat_year = (int)Long.parseLong(treat_dy.substring(0, 4));
 
         double[] labelData = new double[numOfOutputs];
-        double labelDataSum = 0.0;
         for(int i = 0; i < labelData.length; i++) {
             /*
             System.out.println("treat_year = " + treat_year);
@@ -317,14 +318,15 @@ public class MLPMBS {
             System.out.println("index = " + (i + (treat_year - 2004) + 1));
             */
             labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
-            labelDataSum += labelData[i];
         }
 
         INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
         INDArray label = Nd4j.create(labelData, new int[]{1, numOfOutputs});
 
-        DataSet ds = null;
-        if(loan_rat <= 0.0 || labelDataSum <= 0.0) {
+        DataSet ds;
+        if(loan_rat <= 0.0 || loan_ramt_str_sum.equals("")) {
+            // discard data
+            ds = null;
         } else {
             ds = new DataSet(feature, label);
         }
