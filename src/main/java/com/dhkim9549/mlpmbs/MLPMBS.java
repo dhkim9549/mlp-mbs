@@ -27,7 +27,7 @@ import java.io.*;
  */
 public class MLPMBS {
 
-    static String hpId = "MLPMBS_h3_uSGD_mb16_ss16";
+    static String hpId = "MLP_MBS_h3_uSGD_mb16_ss16";
 
     //double learnigRate = Double.parseDouble(args[0]);
     static double learnigRate = 0.0025;
@@ -47,6 +47,9 @@ public class MLPMBS {
     // Number of output variables of the neural network
     static int numOfOutputs = 6;
 
+    // Number of hidden nodes at each layer
+    static int numOfHiddenNodes = 60;
+
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
     static String trainingDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled.txt";
@@ -60,6 +63,7 @@ public class MLPMBS {
         System.out.println("************************************************");
         System.out.println("hpId = " + hpId);
         System.out.println("Number of hidden layers = 3");
+        System.out.println("Number of hidden nodes = " + numOfHiddenNodes);
         System.out.println("learnigRate = " + learnigRate);
         System.out.println("Updater = " + "SGD");
         System.out.println("mini-batch size (batchSize) = " + batchSize);
@@ -120,7 +124,7 @@ public class MLPMBS {
 
         int numInputs = numOfInputs;
         int numOutputs = numOfOutputs;
-        int numHiddenNodes = 30;
+        int numHiddenNodes = numOfHiddenNodes;
 
         System.out.println("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
