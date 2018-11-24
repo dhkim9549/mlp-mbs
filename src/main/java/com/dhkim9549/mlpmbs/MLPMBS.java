@@ -326,21 +326,28 @@ public class MLPMBS {
 
         int treat_year = (int)Long.parseLong(treat_dy.substring(0, 4));
 
+        boolean discardData = false;
+
         double[] labelData = new double[numOfOutputs];
         for(int i = 0; i < labelData.length; i++) {
-            /*
-            System.out.println("treat_year = " + treat_year);
-            System.out.println("i = " + i);
-            System.out.println("index = " + (i + (treat_year - 2004) + 1));
-            */
             labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
+            if(i - 1 >= 0 && labelData[i - 1] < labelData[i]) {
+                discardData = true;
+            }
+        }
+
+        if(loan_ramt_str_sum.equals("")) {
+            discardData = true;
+        }
+        if(loan_rat <= 0.0) {
+            discardData = true;
         }
 
         INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
         INDArray label = Nd4j.create(labelData, new int[]{1, numOfOutputs});
 
         DataSet ds;
-        if(loan_rat <= 0.0 || loan_ramt_str_sum.equals("")) {
+        if(discardData) {
             // discard data
             ds = null;
         } else {
