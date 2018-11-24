@@ -48,7 +48,7 @@ public class MLPMBS {
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 90;
+    static int numOfHiddenNodes = 30;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
@@ -62,7 +62,7 @@ public class MLPMBS {
 
         System.out.println("************************************************");
         System.out.println("hpId = " + hpId);
-        System.out.println("Number of hidden layers = 3");
+        System.out.println("Number of hidden layers = 6");
         System.out.println("Number of hidden nodes = " + numOfHiddenNodes);
         System.out.println("learnigRate = " + learnigRate);
         System.out.println("Updater = " + "SGD");
@@ -150,7 +150,19 @@ public class MLPMBS {
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.RELU)
                         .build())
-                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(4, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(5, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(6, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
+                        .weightInit(WeightInit.XAVIER)
+                        .activation(Activation.RELU)
+                        .build())
+                .layer(7, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.SOFTMAX)
                         .nIn(numHiddenNodes).nOut(numOutputs).build())
