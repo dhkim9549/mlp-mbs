@@ -48,7 +48,7 @@ public class MLPMBS {
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 60;
+    static int numOfHiddenNodes = 30;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
@@ -62,7 +62,7 @@ public class MLPMBS {
 
         System.out.println("************************************************");
         System.out.println("hpId = " + hpId);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden layers = 6");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden layers = 3");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden nodes = " + numOfHiddenNodes);
         System.out.println("learnigRate = " + learnigRate);
         System.out.println("Updater = " + "SGD");
@@ -83,8 +83,6 @@ public class MLPMBS {
 
 
         while(true) {
-
-            cnt++;
 
             if(cnt % 100 == 0) {
                 System.out.println("cnt = " + cnt);
@@ -115,6 +113,8 @@ public class MLPMBS {
             }
 
             logOut.flush();
+
+            cnt++;
         }
     }
 
@@ -130,7 +130,7 @@ public class MLPMBS {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(1)
-                .l1(0.1).l2(0.2)
+                .l2(0.0002)
                 .regularization(true)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
@@ -152,19 +152,7 @@ public class MLPMBS {
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.RELU)
                         .build())
-                .layer(4, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(5, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(6, new DenseLayer.Builder().nIn(numHiddenNodes).nOut(numHiddenNodes)
-                        .weightInit(WeightInit.XAVIER)
-                        .activation(Activation.RELU)
-                        .build())
-                .layer(7, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
+                .layer(4, new OutputLayer.Builder(LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD)
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.SOFTMAX)
                         .nIn(numHiddenNodes).nOut(numOutputs).build())
@@ -326,10 +314,10 @@ public class MLPMBS {
 
     public static void evaluateModel(MultiLayerNetwork model) throws Exception {
 
-        for(int i = 0; i <= 4; i++) {
+        for(int i = 0; i <= 7; i++) {
 
             double[] featureData = new double[numOfInputs];
-            featureData[0] = 0.46 + (double)i * 0.10;
+            featureData[0] = 0.20 + (double)i * 0.10;
             featureData[1] = 0.75;
             featureData[2] = 0.75;
 
