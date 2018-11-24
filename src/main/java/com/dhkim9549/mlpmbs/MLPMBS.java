@@ -30,7 +30,7 @@ public class MLPMBS {
     static String hpId = "MLP_MBS_h3_uSGD_mb16_ss16";
 
     //double learnigRate = Double.parseDouble(args[0]);
-    static double learnigRate = 0.0025;
+    static double learnigRate = 0.000025;
 
     // Number of sample size per iteration
     static long nSamples = 16;
@@ -130,8 +130,8 @@ public class MLPMBS {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(1)
-                .l2(0.02)
-                .regularization(true)
+//                .l1(0.0002)
+//                .regularization(true)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
                 .updater(Updater.SGD)
@@ -183,7 +183,7 @@ public class MLPMBS {
 
             String s = in.readLine();
             if(s == null) {
-                //System.out.println("Training data file rollover...");
+                System.out.println("Training data file rollover...");
                 in.close();
                 in = new LineNumberReader(new FileReader(trainingDataInputFileName));
                 continue;
