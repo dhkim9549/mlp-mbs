@@ -48,7 +48,7 @@ public class MLPMBS {
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 30;
+    static int numOfHiddenNodes = 60;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
@@ -62,8 +62,8 @@ public class MLPMBS {
 
         System.out.println("************************************************");
         System.out.println("hpId = " + hpId);
-        System.out.println("Number of hidden layers = 6");
-        System.out.println("Number of hidden nodes = " + numOfHiddenNodes);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden layers = 6");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden nodes = " + numOfHiddenNodes);
         System.out.println("learnigRate = " + learnigRate);
         System.out.println("Updater = " + "SGD");
         System.out.println("mini-batch size (batchSize) = " + batchSize);
