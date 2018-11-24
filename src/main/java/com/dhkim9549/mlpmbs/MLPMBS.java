@@ -48,7 +48,7 @@ public class MLPMBS {
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 60;
+    static int numOfHiddenNodes = 90;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
