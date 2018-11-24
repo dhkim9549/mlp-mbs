@@ -130,7 +130,7 @@ public class MLPMBS {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(1)
-                .l2(0.0002)
+                .l2(0.02)
                 .regularization(true)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
