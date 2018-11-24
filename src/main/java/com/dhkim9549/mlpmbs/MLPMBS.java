@@ -130,6 +130,8 @@ public class MLPMBS {
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
                 .iterations(1)
+                .l1(0.1).l2(0.2)
+                .regularization(true)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
                 .updater(Updater.SGD)
@@ -262,55 +264,6 @@ public class MLPMBS {
 
 
 
-
-
-        /*
-        double cllct_rate = Double.parseDouble(getToken(s, 18, "\t"));
-        double cllct_rate_old = Double.parseDouble(getToken(s, 17, "\t"));
-        long debt_ramt = Long.parseLong(getToken(s, 16, "\t"));
-        long dischrg_dur_month = Long.parseLong(getToken(s, 3, "\t"));
-        long org_guarnt_dur_month = Long.parseLong(getToken(s, 2, "\t"));
-        String guarnt_dvcd_rent_yn = getToken(s, 4, "\t");
-        String guarnt_dvcd_mid_yn = getToken(s, 5, "\t");
-        String guarnt_dvcd_buy_yn = getToken(s, 6, "\t");
-        String crdrc_yn = getToken(s, 7, "\t");
-        String revivl_yn = getToken(s, 8, "\t");
-        String exempt_yn = getToken(s, 9, "\t");
-        String sptrepay_yn = getToken(s, 10, "\t");
-        String psvact_yn = getToken(s, 11, "\t");
-        long rdbtr_1_cnt = Long.parseLong(getToken(s, 12, "\t")); // new input
-        long rdbtr_2_cnt = Long.parseLong(getToken(s, 13, "\t")); // new input
-        long age = Long.parseLong(getToken(s, 14, "\t")); // new input
-        long dischrg_occr_amt = Long.parseLong(getToken(s, 15, "\t")); // new input
-        String prscp_cmplt_yn = getToken(s, 19, "\t"); // new input
-        String ibon_amtz_yn = getToken(s, 20, "\t"); // new input
-        long rdbtr_3_cnt = Long.parseLong(getToken(s, 21, "\t")); // new input
-        */
-
-
-        /*
-        featureData[0] = cllct_rate_old;
-        featureData[1] = rescaleAmt(debt_ramt);
-        featureData[3] = rescaleAmt(org_guarnt_dur_month, 0, 120, true);
-        featureData[4] = rescaleYn(guarnt_dvcd_rent_yn);
-        featureData[5] = rescaleYn(guarnt_dvcd_mid_yn);
-        featureData[6] = rescaleYn(guarnt_dvcd_buy_yn);
-        featureData[7] = rescaleYn(crdrc_yn);
-        featureData[8] = rescaleYn(revivl_yn);
-        featureData[9] = rescaleYn(exempt_yn);
-        featureData[10] = rescaleYn(sptrepay_yn);
-        featureData[11] = rescaleYn(psvact_yn);
-        featureData[12] = rescaleNum(rdbtr_1_cnt); // new input
-        featureData[13] = rescaleNum(rdbtr_2_cnt); // new input
-        featureData[14] = rescaleAmt(age, 0, 100); // new input
-        featureData[15] = rescaleAmt(dischrg_occr_amt); // new input
-        featureData[16] = rescaleYn(prscp_cmplt_yn); // new input
-        featureData[17] = rescaleYn(ibon_amtz_yn); // new input
-        featureData[18] = rescaleNum(rdbtr_3_cnt); // new input
-        */
-
-
-
         String loan_ramt_str_sum = "";
         String[] loan_ramt_str = new String[14];
         double[] loan_ramt = new double[14];
@@ -331,6 +284,7 @@ public class MLPMBS {
         double[] labelData = new double[numOfOutputs];
         for(int i = 0; i < labelData.length; i++) {
             labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
+            //labelData[i] = loan_ramt[i + (treat_year - 2004) + 1] / loan_amt;
             if(i - 1 >= 0 && labelData[i - 1] < labelData[i]) {
                 discardData = true;
             }
