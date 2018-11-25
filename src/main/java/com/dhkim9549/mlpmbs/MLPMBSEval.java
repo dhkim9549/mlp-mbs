@@ -72,6 +72,15 @@ public class MLPMBSEval {
             double loan_rat = Double.parseDouble(MLPMBS.getToken(s, 1, "\t"));
             featureData[2] = MLPMBS.rescaleAmt(loan_rat, 0, 20);
 
+            double hold_mms_cnt = Double.parseDouble(MLPMBS.getToken(s, 8, "\t"));
+            featureData[3] = MLPMBS.rescaleAmt(hold_mms_cnt, 0, 60);
+
+            double edappnt_repay_amt = Double.parseDouble(MLPMBS.getToken(s, 9, "\t"));
+            featureData[4] = MLPMBS.rescaleAmt(edappnt_repay_amt, 0, 500000000);
+
+
+
+
             INDArray feature = Nd4j.create(featureData, new int[]{1, MLPMBS.numOfInputs});
             INDArray output = model.output(feature);
 

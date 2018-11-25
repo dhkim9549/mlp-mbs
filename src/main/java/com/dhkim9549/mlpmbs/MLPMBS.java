@@ -43,7 +43,7 @@ public class MLPMBS {
     static long nEvalSamples = 10000;
 
     // Number of input variables to the neural network
-    static int numOfInputs = 3;
+    static int numOfInputs = 5;
 
     // Number of output variables of the neural network
     static int numOfOutputs = 2;
@@ -256,6 +256,18 @@ public class MLPMBS {
         double loan_rat = Double.parseDouble(getToken(s, 1, "\t"));
         featureData[2] = rescaleAmt(loan_rat, 0, 20);
 
+        double hold_mms_cnt = Double.parseDouble(getToken(s, 8, "\t"));
+        featureData[3] = rescaleAmt(hold_mms_cnt, 0, 60);
+
+        String edappnt_repay_amt_str = getToken(s, 9, "\t");
+        if(edappnt_repay_amt_str.equals("")) {
+            edappnt_repay_amt_str = "0";
+        }
+        double edappnt_repay_amt = Double.parseDouble(edappnt_repay_amt_str);
+        featureData[4] = rescaleAmt(edappnt_repay_amt, 0, 500000000);
+
+
+
         String loan_ramt_str_sum = "";
         String[] loan_ramt_str = new String[14];
         double[] loan_ramt = new double[14];
@@ -324,8 +336,11 @@ public class MLPMBS {
 
             double[] featureData = new double[numOfInputs];
             featureData[0] =rescaleAmt(20000000, 0, 500000000);
-            featureData[1] = rescaleAmt(i * 50, 0, 480);
-            featureData[2] = 0.75;
+            featureData[1] = rescaleAmt(i * 60, 0, 480);
+            featureData[2] = rescaleAmt(3.5, 0, 20);
+            featureData[3] = rescaleAmt(0, 0, 60);
+            featureData[4] = rescaleAmt(0, 0, 500000000);
+
 
             INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
             INDArray output = model.output(feature);
