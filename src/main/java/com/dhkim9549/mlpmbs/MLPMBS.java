@@ -46,7 +46,7 @@ public class MLPMBS {
     static int numOfInputs = 1;
 
     // Number of output variables of the neural network
-    static int numOfOutputs = 6;
+    static int numOfOutputs = 2;
 
     // Number of hidden nodes at each layer
     static int numOfHiddenNodes = 30;
@@ -59,14 +59,16 @@ public class MLPMBS {
     // Training iteration
     static long cnt = 0;
 
+    static double sum_loan_amt = 0;
+    static double sum_ramt = 0;
+
+
     public static void main(String[] args) throws Exception {
 
         System.out.println("************************************************");
         System.out.println("hpId = " + hpId);
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden layers = 3");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden nodes = " + numOfHiddenNodes);
-
-        System.out.println("Updater = " + "SGD");
         System.out.println("mini-batch size (batchSize) = " + batchSize);
         System.out.println("Number of sample size per iteration (nSamples) = " + nSamples);
         System.out.println("i >= 0");
@@ -87,6 +89,9 @@ public class MLPMBS {
 
             if(cnt % 100 == 0) {
                 System.out.println("cnt = " + cnt);
+                System.out.println("sum_ramt = " + sum_ramt);
+                System.out.println("sum_loan_amt = " + sum_loan_amt);
+                System.out.println("(sum_ramt / sum_loan_amt) = " + ((double)sum_ramt / (double)sum_loan_amt));
             }
             if(cnt % 1 == 0) {
                 logOut.write("cnt = " + cnt + "\n");
@@ -128,8 +133,11 @@ public class MLPMBS {
         int numHiddenNodes = numOfHiddenNodes;
 
         Map<Integer, Double> lrSchedule = new HashMap<>();
-        lrSchedule.put(0, 0.0025 * 0.01); // iteration #, learning rate
-        lrSchedule.put(100, 0.0025 * 0.001);
+        for(int i = 0; i <= 10; i++) {
+            double learningRate = 0.0025 * ((10.0 - (double)i) / 10.0) + 0.000025 * (((double)i) / 10.0);
+            lrSchedule.put(i * 1000, learningRate); // iteration #, learning rate
+        }
+        System.out.println("lrSchedule = " + lrSchedule);
 
         System.out.println("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
@@ -229,6 +237,7 @@ public class MLPMBS {
         return answer;
     }
 
+
     private static DataSet getDataSet(String s) throws Exception {
 
         String loan_acc_no = getToken(s, 19, "\t");
@@ -252,9 +261,6 @@ public class MLPMBS {
         featureData[2] = rescaleAmt(loan_rat, 0, 20);
         */
 
-
-
-
         String loan_ramt_str_sum = "";
         String[] loan_ramt_str = new String[14];
         double[] loan_ramt = new double[14];
@@ -272,11 +278,10 @@ public class MLPMBS {
 
         boolean discardData = false;
 
-        double[] labelData = new double[numOfOutputs];
-        for(int i = 0; i < labelData.length; i++) {
-            //labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
-            labelData[i] = loan_ramt[i + (treat_year - 2004) + 1] / loan_amt;
-            if(i - 1 >= 0 && labelData[i - 1] < labelData[i]) {
+        double[] ramtData = new double[6];
+        for(int i = 0; i < ramtData.length; i++) {
+            ramtData[i] = loan_ramt[i + (treat_year - 2004) + 1];
+            if(i - 1 >= 0 && ramtData[i - 1] < ramtData[i]) {
                 discardData = true;
             }
         }
@@ -290,6 +295,10 @@ public class MLPMBS {
         }
         */
 
+        double[] labelData = new double[numOfOutputs];
+        labelData[0] = ramtData[5] / loan_amt;
+        labelData[1] = 1.0 - labelData[0];
+
         INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
         INDArray label = Nd4j.create(labelData, new int[]{1, numOfOutputs});
 
@@ -298,6 +307,9 @@ public class MLPMBS {
             // discard data
             ds = null;
         } else {
+            sum_ramt += ramtData[5];
+            sum_loan_amt += loan_amt;
+
             ds = new DataSet(feature, label);
         }
 
