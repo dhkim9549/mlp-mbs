@@ -29,9 +29,6 @@ public class MLPMBS {
 
     static String hpId = "MLP_MBS_h3_uSGD_mb16_ss16";
 
-    //double learnigRate = Double.parseDouble(args[0]);
-    static double learnigRate = 0.00025;
-
     // Number of sample size per iteration
     static long nSamples = 16;
 
@@ -49,6 +46,9 @@ public class MLPMBS {
 
     // Number of hidden nodes at each layer
     static int numOfHiddenNodes = 30;
+
+    //double learnigRate = Double.parseDouble(args[0]);
+    static double learnigRate = 0.00025;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
@@ -129,8 +129,8 @@ public class MLPMBS {
         System.out.println("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-                .iterations(1)
-                .l1(0.02)
+//                .iterations(1)
+//                .l1(0.02)
                 .regularization(true)
                 .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
                 .learningRate(learningRate)
