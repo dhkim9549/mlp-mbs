@@ -46,6 +46,7 @@ public class MLPMBSEval {
         header += "loan_rat\t";
         header += "hold_mms_cnt\t";
         header += "edappnt_repay_amt\t";
+        header += "repay_mthd_cd\t";
 
         header += "loan_ramt_rat\t";
         header += "loan_ramt\t";
@@ -80,6 +81,42 @@ public class MLPMBSEval {
             double edappnt_repay_amt = Double.parseDouble(MLPMBS.getToken(s, 9, "\t"));
             featureData[4] = MLPMBS.rescaleAmt(edappnt_repay_amt, 0, 500000000);
 
+            String repay_mthd_cd = MLPMBS.getToken(s, 7, "\t");
+            if(repay_mthd_cd.equals("BL")) {
+                featureData[5] = 1.0;
+            } else {
+                featureData[5] = 0.0;
+            }
+            if(repay_mthd_cd.equals("IB")) {
+                featureData[6] = 1.0;
+            } else {
+                featureData[6] = 0.0;
+            }
+            if(repay_mthd_cd.equals("OB")) {
+                featureData[7] = 1.0;
+            } else {
+                featureData[7] = 0.0;
+            }
+            if(repay_mthd_cd.equals("PI")) {
+                featureData[8] = 1.0;
+            } else {
+                featureData[8] = 0.0;
+            }
+            if(repay_mthd_cd.equals("PL")) {
+                featureData[9] = 1.0;
+            } else {
+                featureData[9] = 0.0;
+            }
+            if(repay_mthd_cd.equals("PO")) {
+                featureData[10] = 1.0;
+            } else {
+                featureData[10] = 0.0;
+            }
+            if(repay_mthd_cd.equals("SU")) {
+                featureData[11] = 1.0;
+            } else {
+                featureData[11] = 0.0;
+            }
 
 
 
@@ -94,6 +131,7 @@ public class MLPMBSEval {
             s2 += loan_rat + "\t";
             s2 += hold_mms_cnt + "\t";
             s2 += edappnt_repay_amt + "\t";
+            s2 += repay_mthd_cd + "\t";
 
             s2 += output.getDouble(0) + "\t";
             s2 += loan_amt * output.getDouble(0) + "\t";

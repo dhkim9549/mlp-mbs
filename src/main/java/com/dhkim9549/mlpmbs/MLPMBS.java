@@ -43,7 +43,7 @@ public class MLPMBS {
     static long nEvalSamples = 10000;
 
     // Number of input variables to the neural network
-    static int numOfInputs = 5;
+    static int numOfInputs = 5 + 7;
 
     // Number of output variables of the neural network
     static int numOfOutputs = 2;
@@ -266,6 +266,45 @@ public class MLPMBS {
         double edappnt_repay_amt = Double.parseDouble(edappnt_repay_amt_str);
         featureData[4] = rescaleAmt(edappnt_repay_amt, 0, 500000000);
 
+        String repay_mthd_cd = getToken(s, 7, "\t");
+        if(repay_mthd_cd.equals("BL")) {
+            featureData[5] = 1.0;
+        } else {
+            featureData[5] = 0.0;
+        }
+        if(repay_mthd_cd.equals("IB")) {
+            featureData[6] = 1.0;
+        } else {
+            featureData[6] = 0.0;
+        }
+        if(repay_mthd_cd.equals("OB")) {
+            featureData[7] = 1.0;
+        } else {
+            featureData[7] = 0.0;
+        }
+        if(repay_mthd_cd.equals("PI")) {
+            featureData[8] = 1.0;
+        } else {
+            featureData[8] = 0.0;
+        }
+        if(repay_mthd_cd.equals("PL")) {
+            featureData[9] = 1.0;
+        } else {
+            featureData[9] = 0.0;
+        }
+        if(repay_mthd_cd.equals("PO")) {
+            featureData[10] = 1.0;
+        } else {
+            featureData[10] = 0.0;
+        }
+        if(repay_mthd_cd.equals("SU")) {
+            featureData[11] = 1.0;
+        } else {
+            featureData[11] = 0.0;
+        }
+
+
+
 
 
         String loan_ramt_str_sum = "";
@@ -340,7 +379,13 @@ public class MLPMBS {
             featureData[2] = rescaleAmt(3.5, 0, 20);
             featureData[3] = rescaleAmt(0, 0, 60);
             featureData[4] = rescaleAmt(0, 0, 500000000);
-
+            featureData[5] = 1.0;
+            featureData[6] = 0.0;
+            featureData[7] = 0.0;
+            featureData[8] = 0.0;
+            featureData[9] = 0.0;
+            featureData[10] = 0.0;
+            featureData[11] = 0.0;
 
             INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
             INDArray output = model.output(feature);
