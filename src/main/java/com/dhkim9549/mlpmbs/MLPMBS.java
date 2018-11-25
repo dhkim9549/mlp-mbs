@@ -48,7 +48,7 @@ public class MLPMBS {
     static int numOfHiddenNodes = 300;
 
     //double learnigRate = Double.parseDouble(args[0]);
-    static double learnigRate = 0.00025;
+    static double learnigRate = 0.0025;
 
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
