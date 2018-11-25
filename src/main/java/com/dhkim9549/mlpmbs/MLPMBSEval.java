@@ -42,6 +42,9 @@ public class MLPMBSEval {
         String header = "";
         header += "loan_acct\t";
         header += "loan_amt\t";
+        header += "loan_mms_cnt\t";
+        header += "loan_rat\t";
+
         header += "loan_ramt_rat\t";
         header += "loan_ramt\t";
         out.write(header + "\n");
@@ -63,6 +66,12 @@ public class MLPMBSEval {
             double loan_amt = Double.parseDouble(MLPMBS.getToken(s, 0, "\t"));
             featureData[0] = MLPMBS.rescaleAmt(loan_amt, 0, 500000000);
 
+            double loan_mms_cnt = Double.parseDouble(MLPMBS.getToken(s, 5, "\t"));
+            featureData[1] = MLPMBS.rescaleAmt(loan_mms_cnt, 0, 480);
+
+            double loan_rat = Double.parseDouble(MLPMBS.getToken(s, 1, "\t"));
+            featureData[2] = MLPMBS.rescaleAmt(loan_rat, 0, 20);
+
             INDArray feature = Nd4j.create(featureData, new int[]{1, MLPMBS.numOfInputs});
             INDArray output = model.output(feature);
 
@@ -70,6 +79,9 @@ public class MLPMBSEval {
             String s2 = "";
             s2 += loan_acc_no + "\t";
             s2 += loan_amt + "\t";
+            s2 += loan_mms_cnt + "\t";
+            s2 += loan_rat + "\t";
+
             s2 += output.getDouble(0) + "\t";
             s2 += loan_amt * output.getDouble(0) + "\t";
 
