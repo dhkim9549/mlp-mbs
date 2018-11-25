@@ -39,13 +39,13 @@ public class MLPMBS {
     static long nEvalSamples = 10000;
 
     // Number of input variables to the neural network
-    static int numOfInputs = 3;
+    static int numOfInputs = 1;
 
     // Number of output variables of the neural network
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 300;
+    static int numOfHiddenNodes = 30;
 
     //double learnigRate = Double.parseDouble(args[0]);
     static double learnigRate = 0.0025;
@@ -243,11 +243,13 @@ public class MLPMBS {
         double loan_amt = Double.parseDouble(getToken(s, 0, "\t"));
         featureData[0] = rescaleAmt(loan_amt, 0, 500000000);
 
+        /*
         double loan_mms_cnt = Double.parseDouble(getToken(s, 5, "\t"));
         featureData[1] = rescaleAmt(loan_mms_cnt, 0, 480);
 
         double loan_rat = Double.parseDouble(getToken(s, 1, "\t"));
         featureData[2] = rescaleAmt(loan_rat, 0, 20);
+        */
 
 
 
@@ -281,9 +283,11 @@ public class MLPMBS {
         if(loan_ramt_str_sum.equals("")) {
             discardData = true;
         }
+        /*
         if(loan_rat <= 0.0) {
             discardData = true;
         }
+        */
 
         INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
         INDArray label = Nd4j.create(labelData, new int[]{1, numOfOutputs});
@@ -295,13 +299,6 @@ public class MLPMBS {
         } else {
             ds = new DataSet(feature, label);
         }
-
-        /*
-        System.out.println("\n guarnt_no = " + guarnt_no);
-        System.out.println(rdbtr_2_cnt + " " + age + " " + dischrg_occr_amt + " " + prscp_cmplt_yn + " " + ibon_amtz_yn);
-        System.out.println(cllct_rate);
-        System.out.println("ds = " + ds);
-        */
 
         // System.out.println("\n ds ");
         // System.out.println( ds);
@@ -318,8 +315,10 @@ public class MLPMBS {
 
             double[] featureData = new double[numOfInputs];
             featureData[0] = 0.20 + (double)i * 0.10;
+            /*
             featureData[1] = 0.75;
             featureData[2] = 0.75;
+            */
 
             INDArray feature = Nd4j.create(featureData, new int[]{1, numOfInputs});
             INDArray output = model.output(feature);
