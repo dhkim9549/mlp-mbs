@@ -44,6 +44,8 @@ public class MLPMBSEval {
         header += "loan_amt\t";
         header += "loan_mms_cnt\t";
         header += "loan_rat\t";
+        header += "hold_mms_cnt\t";
+        header += "edappnt_repay_amt\t";
 
         header += "loan_ramt_rat\t";
         header += "loan_ramt\t";
@@ -90,6 +92,8 @@ public class MLPMBSEval {
             s2 += loan_amt + "\t";
             s2 += loan_mms_cnt + "\t";
             s2 += loan_rat + "\t";
+            s2 += hold_mms_cnt + "\t";
+            s2 += edappnt_repay_amt + "\t";
 
             s2 += output.getDouble(0) + "\t";
             s2 += loan_amt * output.getDouble(0) + "\t";
