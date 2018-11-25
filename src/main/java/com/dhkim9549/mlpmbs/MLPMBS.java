@@ -45,7 +45,7 @@ public class MLPMBS {
     static int numOfOutputs = 6;
 
     // Number of hidden nodes at each layer
-    static int numOfHiddenNodes = 30;
+    static int numOfHiddenNodes = 300;
 
     //double learnigRate = Double.parseDouble(args[0]);
     static double learnigRate = 0.00025;
