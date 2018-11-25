@@ -16,7 +16,11 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
+import org.nd4j.linalg.learning.config.Sgd;
+import org.nd4j.linalg.schedule.MapSchedule;
+import org.nd4j.linalg.schedule.ScheduleType;
 
 import java.util.*;
 import java.io.*;
@@ -47,9 +51,6 @@ public class MLPMBS {
     // Number of hidden nodes at each layer
     static int numOfHiddenNodes = 30;
 
-    //double learnigRate = Double.parseDouble(args[0]);
-    static double learnigRate = 0.0025 * 0.001;
-
     static LineNumberReader in = null;
     static BufferedWriter logOut = null;
     static String trainingDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled.txt";
@@ -64,14 +65,14 @@ public class MLPMBS {
         System.out.println("hpId = " + hpId);
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden layers = 3");
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Number of hidden nodes = " + numOfHiddenNodes);
-        System.out.println("learnigRate = " + learnigRate);
+
         System.out.println("Updater = " + "SGD");
         System.out.println("mini-batch size (batchSize) = " + batchSize);
         System.out.println("Number of sample size per iteration (nSamples) = " + nSamples);
         System.out.println("i >= 0");
         System.out.println("************************************************");
 
-        MultiLayerNetwork model = getInitModel(learnigRate);
+        MultiLayerNetwork model = getInitModel();
         //MultiLayerNetwork model = readModelFromFile("/down/sin/css_model_MLPMBS_h2_uSGD_mb16_ss16_200000.zip");
 
         NeuralNetConfiguration config = model.conf();
@@ -91,7 +92,7 @@ public class MLPMBS {
                 logOut.write("cnt = " + cnt + "\n");
                 evaluateModel(model);
             }
-            if(cnt % 1000 == 0) {
+            if(cnt % 100 == 0) {
                 System.out.println(new Date());
                 logOut.write(new Date() + "\n");
             }
@@ -118,7 +119,7 @@ public class MLPMBS {
         }
     }
 
-    public static MultiLayerNetwork getInitModel(double learningRate) throws Exception {
+    public static MultiLayerNetwork getInitModel() throws Exception {
 
         int seed = 123;
 
@@ -126,15 +127,15 @@ public class MLPMBS {
         int numOutputs = numOfOutputs;
         int numHiddenNodes = numOfHiddenNodes;
 
+        Map<Integer, Double> lrSchedule = new HashMap<>();
+        lrSchedule.put(0, 0.0025 * 0.01); // iteration #, learning rate
+        lrSchedule.put(100, 0.0025 * 0.001);
+
         System.out.println("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-//                .iterations(1)
 //                .l1(0.02)
-                .regularization(true)
-                .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-                .learningRate(learningRate)
-                .updater(Updater.SGD)
+                .updater(new Nesterovs(new MapSchedule(ScheduleType.ITERATION, lrSchedule)))
                 .list()
                 .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
                         .weightInit(WeightInit.XAVIER)
@@ -156,7 +157,7 @@ public class MLPMBS {
                         .weightInit(WeightInit.XAVIER)
                         .activation(Activation.SOFTMAX)
                         .nIn(numHiddenNodes).nOut(numOutputs).build())
-                .pretrain(false).backprop(true).build();
+                .build();
 
         MultiLayerNetwork model = new MultiLayerNetwork(conf);
         model.init();
@@ -273,8 +274,8 @@ public class MLPMBS {
 
         double[] labelData = new double[numOfOutputs];
         for(int i = 0; i < labelData.length; i++) {
-            labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
-            //labelData[i] = loan_ramt[i + (treat_year - 2004) + 1] / loan_amt;
+            //labelData[i] = rescaleAmt(loan_ramt[i + (treat_year - 2004) + 1], 0, 500000000);
+            labelData[i] = loan_ramt[i + (treat_year - 2004) + 1] / loan_amt;
             if(i - 1 >= 0 && labelData[i - 1] < labelData[i]) {
                 discardData = true;
             }
