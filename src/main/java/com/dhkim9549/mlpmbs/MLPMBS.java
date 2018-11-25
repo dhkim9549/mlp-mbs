@@ -30,7 +30,7 @@ public class MLPMBS {
     static String hpId = "MLP_MBS_h3_uSGD_mb16_ss16";
 
     //double learnigRate = Double.parseDouble(args[0]);
-    static double learnigRate = 0.0025;
+    static double learnigRate = 0.00025;
 
     // Number of sample size per iteration
     static long nSamples = 16;
