@@ -102,11 +102,9 @@ public class MLPMBS {
                 logOut.write(new Date() + "\n");
             }
 
-            /*
-            if(i % 1 == 0) {
+            if(cnt % 10000 == 0) {
                 MLPMBSEval.evaluateModelBatch(model);
             }
-            */
 
             List<DataSet> listDs = getTrainingData();
             DataSetIterator trainIter = new ListDataSetIterator(listDs, batchSize);
@@ -115,7 +113,7 @@ public class MLPMBS {
             model = train(model, trainIter);
 
             if (cnt % 50000 == 0) {
-                writeModelToFile(model, "/down/mbs_model_" + hpId + "_" + cnt + ".zip");
+                writeModelToFile(model, "/down/mbs_model_" + hpId + "_numOfInputs_" + numOfInputs + "_cnt_" + cnt + ".zip");
             }
 
             logOut.flush();
@@ -142,7 +140,6 @@ public class MLPMBS {
         System.out.println("Build model....");
         MultiLayerConfiguration conf = new NeuralNetConfiguration.Builder()
                 .seed(seed)
-//                .l1(0.02)
                 .updater(new Nesterovs(new MapSchedule(ScheduleType.ITERATION, lrSchedule)))
                 .list()
                 .layer(0, new DenseLayer.Builder().nIn(numInputs).nOut(numHiddenNodes)
