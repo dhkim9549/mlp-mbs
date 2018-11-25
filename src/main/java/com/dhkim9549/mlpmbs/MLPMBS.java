@@ -311,10 +311,11 @@ public class MLPMBS {
 
     public static void evaluateModel(MultiLayerNetwork model) throws Exception {
 
-        for(int i = 0; i <= 7; i++) {
+        for(int i = 0; i <= 10; i++) {
 
             double[] featureData = new double[numOfInputs];
-            featureData[0] = 0.20 + (double)i * 0.10;
+            featureData[0] =rescaleAmt(50000000 * i, 0, 500000000);
+
             /*
             featureData[1] = 0.75;
             featureData[2] = 0.75;
