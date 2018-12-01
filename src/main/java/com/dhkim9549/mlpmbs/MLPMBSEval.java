@@ -13,8 +13,8 @@ import java.io.*;
 public class MLPMBSEval {
 
     static LineNumberReader in = null;
-    static String testDataInputFileName = "/down/mbs_data/beta_zero/testing_data_20181122/TESTING_DATA_20181122.txt";
-//    static String testDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled_2.txt";
+//    static String testDataInputFileName = "/down/mbs_data/beta_zero/testing_data_20181122/TESTING_DATA_20181122.txt";
+    static String testDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled_2.txt";
     static String modelInputFileName = "/down/model/drp_model_MLPDRP_h3_uSGD_mb16_ss16_3250000.zip";
 
     public static void main(String[] args) throws Exception {
