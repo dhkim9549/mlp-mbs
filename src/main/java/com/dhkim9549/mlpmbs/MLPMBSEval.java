@@ -14,6 +14,7 @@ public class MLPMBSEval {
 
     static LineNumberReader in = null;
     static String testDataInputFileName = "/down/mbs_data/beta_zero/testing_data_20181122/TESTING_DATA_20181122.txt";
+//    static String testDataInputFileName = "/down/mbs_data/beta_zero/training_data_20181120/TRAINING_DATAS_20181120_shuffled_2.txt";
     static String modelInputFileName = "/down/model/drp_model_MLPDRP_h3_uSGD_mb16_ss16_3250000.zip";
 
     public static void main(String[] args) throws Exception {
@@ -62,6 +63,10 @@ public class MLPMBSEval {
                 continue;
             }
 
+            if(i % 1000 == 0) {
+                System.out.println("i = " + i);
+            }
+
             String loan_acc_no = MLPMBS.getToken(s, 19, "\t");
 
             double[] featureData = new double[MLPMBS.numOfInputs];
@@ -73,12 +78,18 @@ public class MLPMBSEval {
             featureData[1] = MLPMBS.rescaleAmt(loan_mms_cnt, 0, 480);
 
             double loan_rat = Double.parseDouble(MLPMBS.getToken(s, 1, "\t"));
-            featureData[2] = MLPMBS.rescaleAmt(loan_rat, 0, 20);
+            featureData[2] = MLPMBS.rescaleAmt(loan_rat, 0, 100);
 
             double hold_mms_cnt = Double.parseDouble(MLPMBS.getToken(s, 8, "\t"));
             featureData[3] = MLPMBS.rescaleAmt(hold_mms_cnt, 0, 60);
 
-            double edappnt_repay_amt = Double.parseDouble(MLPMBS.getToken(s, 9, "\t"));
+            String edappnt_repay_amt_str = MLPMBS.getToken(s, 9, "\t");
+            double edappnt_repay_amt = 0.0;
+            if(edappnt_repay_amt_str.equals("")) {
+                edappnt_repay_amt = 0.0;
+            } else {
+                edappnt_repay_amt = Double.parseDouble(MLPMBS.getToken(s, 9, "\t"));
+            }
             featureData[4] = MLPMBS.rescaleAmt(edappnt_repay_amt, 0, 500000000);
 
             String repay_mthd_cd = MLPMBS.getToken(s, 7, "\t");

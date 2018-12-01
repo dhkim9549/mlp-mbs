@@ -254,7 +254,7 @@ public class MLPMBS {
         featureData[1] = rescaleAmt(loan_mms_cnt, 0, 480);
 
         double loan_rat = Double.parseDouble(getToken(s, 1, "\t"));
-        featureData[2] = rescaleAmt(loan_rat, 0, 20);
+        featureData[2] = rescaleAmt(loan_rat, 0, 100);
 
         double hold_mms_cnt = Double.parseDouble(getToken(s, 8, "\t"));
         featureData[3] = rescaleAmt(hold_mms_cnt, 0, 60);
@@ -415,8 +415,10 @@ public class MLPMBS {
                 x = min;
             }
         }
-        double base = (max - min) / 10.0;
+//        double base = (max - min) / 10.0;
+        double base = 1.0;
         double y = (Math.log(x - min + base) - Math.log(base)) / (Math.log(max - min + base) - Math.log(base));
+        y = y * 2.0 - 1.0;
         return y;
     }
 
